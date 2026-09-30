@@ -37,6 +37,8 @@ builder.Services.AddOpenApi(options =>
 
 var app = builder.Build();
 
+await app.Services.ApplyMigrationsAsync();
+
 app.UseExceptionHandler();
 
 // Swagger habilitado en todos los entornos: es requisito de la prueba evaluarlo en la URL pública
