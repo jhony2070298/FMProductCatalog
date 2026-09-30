@@ -1,6 +1,13 @@
+using ProductCatalog.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+var connectionString = builder.Configuration.GetConnectionString("Default")
+    ?? throw new InvalidOperationException("Falta la cadena de conexión 'Default'.");
+
+builder.Services.AddInfrastructure(connectionString);
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
