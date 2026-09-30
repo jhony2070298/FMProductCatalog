@@ -1,6 +1,7 @@
 using ProductCatalog.Api.Middleware;
 using ProductCatalog.Application;
 using ProductCatalog.Infrastructure;
+using ProductCatalog.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,9 @@ var connectionString = builder.Configuration.GetConnectionString("Default")
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(connectionString);
+
+builder.Services.AddHealthChecks()
+    .AddDbContextCheck<AppDbContext>("database");
 
 builder.Services.AddControllers(options =>
     // Las validaciones las maneja FluentValidation, con mensajes consistentes en español
@@ -40,12 +44,13 @@ app.MapOpenApi();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/openapi/v1.json", "ProductCatalog API v1");
-    options.DocumentTitle = "ProductCatalog API";
+    options.DocumentTitle = "FMProductCatalog API";
 });
 
 app.UseAuthorization();
 app.MapControllers();
+app.MapHealthChecks("/health");
 
 app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 
-app.Run();
+await app.RunAsync();

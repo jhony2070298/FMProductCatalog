@@ -16,5 +16,18 @@ services:
       timeout: 5s
       retries: 5
 
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: productcatalog-api
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ConnectionStrings__Default: "Host=postgres;Port=5432;Database=productcatalog;Username=postgres;Password=postgres"
+    ports:
+      - "8080:8080"
+
 volumes:
   pgdata:

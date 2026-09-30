@@ -19,5 +19,12 @@ namespace ProductCatalog.Infrastructure
 
             return services;
         }
+
+        public static async Task ApplyMigrationsAsync(this IServiceProvider services, CancellationToken ct = default)
+        {
+            await using var scope = services.CreateAsyncScope();
+            var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+            await db.Database.MigrateAsync(ct);
+        }
     }
 }
