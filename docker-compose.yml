@@ -1,7 +1,6 @@
 services:
   postgres:
     image: postgres:18-alpine
-    container_name: productcatalog-db
     environment:
       POSTGRES_DB: productcatalog
       POSTGRES_USER: postgres
@@ -20,7 +19,6 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: productcatalog-api
     depends_on:
       postgres:
         condition: service_healthy
